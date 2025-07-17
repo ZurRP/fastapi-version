@@ -1,0 +1,465 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="my-4">Game Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <select class="form-control" id="gameSelect">
+            <option value="" disabled selected>Select a game</option>
+            <option value="all">All games</option>
+        </select>
+    </div>
+</div>
+
+<!-- Loading Skeleton -->
+<div id="loadingSkeleton" class="d-none">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="skeleton skeleton-text"></div>
+        </div>
+    </div>
+
+    <h2 class="my-4">API Actions</h2>
+    <table class="skeleton-table">
+        <thead>
+            <tr>
+                <th class="skeleton skeleton-text"></th>
+                <th class="skeleton skeleton-text"></th>
+                <th class="skeleton skeleton-text"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+            </tr>
+            <tr>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+            </tr>
+            <tr>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+                <td class="skeleton skeleton-text"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="content">
+    <div class="row">
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Views Total</h5>
+                    <p class="card-text" id="viewsTotal">Select a game...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Time Average</h5>
+                    <p class="card-text" id="timeAverage">Select a game...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Times Total (s)</h5>
+                    <p class="card-text" id="timesTotal">Select a game...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Total Duration</h5>
+                    <p class="card-text" id="totalDurationReadable">Select a game...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Engagement Total</h5>
+                    <p class="card-text" id="engagementTotal">Select a game...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-4">
+            <div class="card text-white bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Retention</h5>
+                    <p class="card-text" id="retention">Select a game...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="my-4">API Actions</h2>
+    <table class="table table-striped" id="actionsTable">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Details</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Content will be populated by JavaScript -->
+        </tbody>
+    </table>
+    <div id="pagination" class="pagination"></div>
+    <p id="totalPages" class="mt-2"></p>
+    <div id="pageInputContainer" class="mt-2" style="display: none;">
+        <input type="number" id="pageInput" min="1" placeholder="Enter page number">
+        <button id="goToPageButton" class="btn btn-primary">Go</button>
+    </div>
+    <button id="exportButton" class="btn btn-secondary mt-4">Export to CSV</button>
+    <button id="exportAllButton" class="btn btn-primary mt-4">Export All</button>
+</div>
+
+<style>
+    /* Add this CSS to your stylesheet */
+    .skeleton {
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        min-height: 20px;
+        margin-bottom: 10px;
+    }
+
+    .skeleton-text {
+        width: 100%;
+        height: 1em;
+        margin-bottom: 10px;
+    }
+
+    .skeleton-table {
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+
+    .skeleton-table td {
+        padding: 10px;
+    }
+
+    .skeleton-loading {
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0% {
+            background-color: #e0e0e0;
+        }
+        50% {
+            background-color: #f0f0f0;
+        }
+        100% {
+            background-color: #e0e0e0;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    let tableData = [];
+    let allDataLoaded = false;
+
+    const loadingSkeleton = document.getElementById('loadingSkeleton');
+    const content = document.getElementById('content');
+
+    function showLoadingSkeleton() {
+        loadingSkeleton.classList.remove('d-none');
+        content.classList.add('d-none');
+    }
+
+    function hideLoadingSkeleton() {
+        loadingSkeleton.classList.add('d-none');
+        content.classList.remove('d-none');
+    }
+
+    // Fetch available games and populate the dropdown
+    fetch('/api/games')
+        .then(response => response.json())
+        .then(games => {
+            const gameSelect = document.getElementById('gameSelect');
+            games.forEach(game => {
+                const option = document.createElement('option');
+                option.value = game;
+                option.textContent = game;
+                gameSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching games:', error));
+
+    // Add event listener to fetch data when a game is selected
+    document.getElementById('gameSelect').addEventListener('change', function() {
+        const selectedGame = this.value;
+        currentPage = 1;
+
+        showLoadingSkeleton();
+
+        if (selectedGame === 'all') {
+            if (confirm('אתה בטוח? זה יכול לקחת זמן לטעון את כל המשחקים')) {
+                fetchAllGamesData().then(() => hideLoadingSkeleton());
+            } else {
+                this.value = '';
+                hideLoadingSkeleton();
+            }
+        } else {
+            fetchData(`/api/data/${selectedGame}`, `/api/data/metrics/${selectedGame}`).then(() => hideLoadingSkeleton());
+        }
+    });
+
+    async function fetchAllGamesData() {
+        let allActions = [];
+        let allMetrics = {
+            ViewsTotal: 0,
+            TimeAverage: 0,
+            TimesTotal: 0,
+            TotalDurationReadable: 0,
+            EngagementTotal: 0,
+            Retention: 0,
+        };
+
+        const response = await fetch('/api/games');
+        const games = await response.json();
+
+        for (let game of games) {
+            const metricsResponse = await fetch(`/api/data/metrics/${game}`);
+            const metrics = await metricsResponse.json();
+            allMetrics.ViewsTotal += metrics.ViewsTotal;
+            allMetrics.TimeAverage += metrics.TimeAverage;
+            allMetrics.TimesTotal += metrics.TimesTotal;
+            allMetrics.TotalDurationReadable += metrics.TimesTotal;
+            allMetrics.EngagementTotal += metrics.EngagementTotal;
+            allMetrics.Retention += metrics.Retention;
+
+            allActions = allActions.concat(await fetchGameData(game));
+        }
+
+        allMetrics.TimeAverage /= games.length;
+        allMetrics.Retention /= games.length;
+
+        allMetrics.TotalDurationReadable = convertSecondsToReadable(allMetrics.TotalDurationReadable);
+
+        updateStats(allMetrics);
+        tableData = allActions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by newest first
+        displayTable(tableData, currentPage);
+        setupPagination(tableData);
+    }
+
+    async function fetchData(dataUrl, metricsUrl) {
+        const metricsPromise = fetch(metricsUrl).then(response => response.json());
+        const dataPromise = fetch(`${dataUrl}?limit=10`).then(response => response.json());
+
+        const [metrics, data] = await Promise.all([metricsPromise, dataPromise]);
+
+        metrics.TotalDurationReadable = convertSecondsToReadable(metrics.TimesTotal);
+
+        updateStats(metrics);
+        tableData = data.actions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by newest first
+        displayTable(tableData, currentPage);
+        setupPagination(tableData);
+    }
+
+    async function fetchGameData(game) {
+        let gameActions = [];
+        let offset = 0;
+        while (true) {
+            const response = await fetch(`/api/data/${game}?limit=500000&offset=${offset}`);
+            const data = await response.json();
+            if (data.actions.length > 0) {
+                gameActions = gameActions.concat(data.actions);
+                offset += 500000;
+            } else {
+                break;
+            }
+        }
+        return gameActions;
+    }
+
+    function updateStats(data) {
+        document.getElementById('viewsTotal').innerText = data.ViewsTotal;
+        document.getElementById('timeAverage').innerText = data.TimeAverage.toFixed(2);
+        document.getElementById('timesTotal').innerText = data.TimesTotal.toFixed(2);
+        document.getElementById('totalDurationReadable').innerText = data.TotalDurationReadable;
+        document.getElementById('engagementTotal').innerText = data.EngagementTotal;
+        document.getElementById('retention').innerText = (data.Retention * 100).toFixed(2) + '%';
+    }
+
+    function displayTable(data, page) {
+        const tableBody = document.querySelector('#actionsTable tbody');
+        tableBody.innerHTML = '';
+
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedItems = data.slice(start, end);
+
+        paginatedItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.type}</td>
+                <td>${item.details}</td>
+                <td>${convertToGMT3(item.timestamp)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function setupPagination(data) {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        const pageCount = Math.ceil(data.length / rowsPerPage);
+        document.getElementById('totalPages').innerText = `Total Pages: ${pageCount}`;
+
+        if (pageCount > 5) {
+            document.getElementById('pageInputContainer').style.display = 'block';
+        } else {
+            document.getElementById('pageInputContainer').style.display = 'none';
+        }
+
+        for (let i = 1; i <= pageCount; i++) {
+            if (pageCount > 5 && (i < currentPage - 2 || i > currentPage + 2)) {
+                if (i === 1 || i === pageCount || (i === currentPage - 3) || (i === currentPage + 3)) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.innerText = '...';
+                    pagination.appendChild(ellipsis);
+                }
+                continue;
+            }
+
+            const button = document.createElement('button');
+            button.innerText = i;
+            if (i === currentPage) button.classList.add('active');
+            button.addEventListener('click', () => {
+                currentPage = i;
+                displayTable(data, currentPage);
+                setupPagination(data);
+            });
+            pagination.appendChild(button);
+        }
+    }
+
+    function convertSecondsToReadable(seconds) {
+        const days = Math.floor(seconds / (24 * 60 * 60));
+        const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((seconds % (60 * 60)) / 60);
+        const secs = seconds % 60;
+
+        return `${days}d ${hours}h ${minutes}m ${secs}s`;
+    }
+
+    // Helper function to convert UTC timestamp to GMT+3
+    function convertToGMT3(utcTimestamp) {
+        const utcDate = new Date(utcTimestamp);
+        const gmt3Offset = -3 * 60 * 60 * 1000; // GMT+3 in milliseconds
+        const gmt3Date = new Date(utcDate.getTime() + gmt3Offset);
+        return gmt3Date.toLocaleString(); // Adjust this if you need a specific format
+    }
+
+    document.getElementById('exportButton').addEventListener('click', function() {
+        exportToCsv(tableData);
+    });
+
+    document.getElementById('exportAllButton').addEventListener('click', async function() {
+        const selectedGame = document.getElementById('gameSelect').value;
+        await handleExportAll(selectedGame);
+    });
+
+    async function handleExportAll(selectedGame) {
+        document.getElementById('exportAllButton').disabled = true;
+        document.getElementById('exportAllButton').innerText = 'Loading...';
+        let allData = [];
+
+        if (selectedGame === 'all') {
+            const response = await fetch('/api/games');
+            const games = await response.json();
+
+            for (let game of games) {
+                allData = allData.concat(await fetchGameData(game));
+            }
+        } else {
+            allData = await fetchGameData(selectedGame);
+        }
+
+        exportToCsv(allData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+        document.getElementById('exportAllButton').disabled = false;
+        document.getElementById('exportAllButton').innerText = 'Export All';
+    }
+
+    function exportToCsv(data) {
+        let csvContent = 'Type,Details,Timestamp\n';
+
+        const impressionCounts = {};
+
+        data.forEach(action => {
+            if (action.type === 'Impression') {
+                if (!impressionCounts[action.details]) {
+                    impressionCounts[action.details] = 0;
+                }
+                impressionCounts[action.details]++;
+                if (impressionCounts[action.details] > 10){
+					return;
+                }
+            }
+        });
+
+
+        data.forEach(action => {
+            const row = `${action.type},${action.details},${convertToGMT3(action.timestamp)}\n`;
+            csvContent += row;
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'all_actions.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.getElementById('goToPageButton').addEventListener('click', function() {
+        const pageNumber = parseInt(document.getElementById('pageInput').value);
+        if (pageNumber >= 1 && pageNumber <= Math.ceil(tableData.length / rowsPerPage)) {
+            currentPage = pageNumber;
+            displayTable(tableData, currentPage);
+            setupPagination(tableData);
+        }
+    });
+});
+</script>
+
+{% endblock %}

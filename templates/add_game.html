@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="my-4">Add New Game</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="gameName">Game Name</label>
+        <input type="text" class="form-control" id="gameName" name="game_name" placeholder="Enter game name, Use numbers only." required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Game</button>
+</form>
+
+{% if token %}
+<div id="tokenContainer" class="mt-4">
+    <h5>Game added successfully!</h5>
+    <p>Your token: <span id="gameToken">{{ token }}</span></p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="my-4">Remove Game</h1>
+<form id="removeGameForm" method="POST" action="{{ url_for('remove_game') }}">
+    <div class="form-group">
+        <label for="gameSelect">Select Game to Remove</label>
+        <select class="form-control" id="gameSelect" name="game_name" required>
+            {% for game in games %}
+            <option value="{{ game.name }}">{{ game.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="confirmGameName">Type the game name to confirm</label>
+        <input type="text" class="form-control" id="confirmGameName" required>
+    </div>
+    <button type="submit" class="btn btn-danger">Remove Game</button>
+</form>
+
+<script>
+    document.getElementById('removeGameForm').addEventListener('submit', function(event) {
+        const selectedGame = document.getElementById('gameSelect').value;
+        const confirmGameName = document.getElementById('confirmGameName').value;
+
+        if (selectedGame !== confirmGameName) {
+            event.preventDefault();
+            alert('The game name entered does not match the selected game. Please try again.');
+        } else {
+            if (!confirm('Are you sure you want to remove the game? This action is irreversible.')) {
+                event.preventDefault();
+            }
+        }
+    });
+</script>
+{% endblock %}

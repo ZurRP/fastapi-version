@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="my-4">Package Installer</h1>
+
+<form id="packageForm" method="POST">
+    <div class="form-group">
+        <label for="gameName">Game Name</label>
+        <input type="text" class="form-control" id="gameName" name="game_name" placeholder="Enter game name" required>
+    </div>
+    <div class="form-group">
+        <label for="token">Token</label>
+        <input type="text" class="form-control" id="token" name="token" placeholder="Enter token" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Install Package</button>
+</form>
+
+<div id="packageLink" class="mt-4" style="display: none;">
+    <h5>Package created successfully!</h5>
+    <a href="" id="downloadLink">Download Package</a>
+</div>
+
+<script>
+    document.getElementById('packageForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        fetch('/package_installer', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('downloadLink').href = data.package_url;
+                document.getElementById('packageLink').style.display = 'block';
+            } else {
+                alert('Failed to create package: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}
