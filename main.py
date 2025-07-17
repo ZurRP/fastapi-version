@@ -5,6 +5,10 @@ from fastapi.staticfiles import StaticFiles
 
 from routes import auth, dashboard, package, survey, data, api
 from db import Base, engine
+from models import Base
+
+Base.metadata.create_all(bind=engine)  # ✅ יצירת טבלאות
+
 
 app = FastAPI(title="Game Metrics")
 
